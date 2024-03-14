@@ -3,6 +3,16 @@
 @tailwind utilities;
 
 
+:root {
+  --bg-nav: #1a1a1a;
+}
+
+html, body, body > div {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-nav);
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
