@@ -10,7 +10,7 @@ function Navbar() {
   return (
     <header className={`bg-black p-1 bg-opacity-40 backdrop-blur-sm text-center top-0 w-full z-[100] ${isScrolled?"sticky mt-[-60px]":"absolute"}`}>
       <div className={`relative w-[200px] transition-all ease-linear duration-300 ${isScrolled?"mr-[100%] translate-x-[0%] h-[60px]":"ml-[50%] translate-x-[-50%] h-[80px]"}`}>
-        <Image src={"/media/logo.png"} alt={"CaliHub"} fill objectFit="cover" />
+        <Link href="/"><Image src={"/media/logo.png"} alt={"CaliHub"} fill objectFit="cover"/></Link>
       </div>
 
       <button

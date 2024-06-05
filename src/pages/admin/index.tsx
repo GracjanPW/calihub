@@ -1,24 +1,37 @@
+import { signOut, useSession } from "next-auth/react";
+
+import React, { useEffect } from "react";
+import {Roles as PrismaRoles} from "@/../.prisma/client"
 import { getServerSession } from "next-auth";
-import { signIn, signOut, useSession } from "next-auth/react";
-import React from "react";
+import { authOptions } from "../api/auth/[...nextauth]";
 
 function Page() {
-  const { data: session } = useSession();
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user?.name}
-        <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
   return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-  );
+    <h1>
+      admin page
+      <button onClick={()=>signOut()}>Logout</button>
+    </h1>
+  )
 }
+
+export async function getServerSideProps(context) {
+  const session = await getServerSession(context.req, context.res, authOptions)
+  console.log(session) 
+  if (session?.user.role != PrismaRoles.SUPERADMIN) {
+    return {
+      redirect: {
+        destination: "/admin/login",
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {
+      session,
+    },
+  }
+}
+
 
 export default Page;

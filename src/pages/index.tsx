@@ -69,9 +69,15 @@ export default function Home() {
             <h1 className="text-3xl font-bold bg-red-800 py-3 rounded-md my-2">
               Socials and Contact
             </h1>
-            <div className="border-red-800 border-2 rounded-sm p-4 text-lg">
-              <InstagramIcon/>
-
+            <div className="border-red-800 border-2 rounded-sm p-4 text-lg flex-row flex justify-center space-x-4">
+              <div className="flex-col flex items-center">
+                <InstagramIcon />
+                <p>Gw_gains</p>
+              </div>
+              <div className="flex-col flex items-center">
+                <p className="text-5xl">🎁</p>
+                <p>Gw_gains</p>
+              </div>
             </div>
           </div>
         </section>
