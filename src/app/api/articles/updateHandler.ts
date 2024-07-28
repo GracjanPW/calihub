@@ -3,10 +3,10 @@ import checkAuthorization from "@/lib/checkAuthorization";
 import { Roles, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { Data } from ".";
-import { authOptions } from "../auth/[...nextauth]";
+import { Data } from "./route";
+import { authOptions } from "../auth/[...nextauth]/route";
 
-export async function updateHandler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export async function PUT(req: NextApiRequest, res: NextApiResponse<Data>) {
     const session = await getServerSession(req, res, authOptions);
 
     if (!checkAuthorization(session, [Roles.ADMIN, Roles.SUPERADMIN, Roles.PUBLISHER])) {

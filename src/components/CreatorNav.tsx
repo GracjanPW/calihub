@@ -1,4 +1,4 @@
-
+"use client"
 import useWindowSize from "@/hooks/useWindowSize";
 import { useSession } from "next-auth/react";
 import Link from "next/link";

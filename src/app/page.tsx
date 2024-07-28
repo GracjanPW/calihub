@@ -1,11 +1,12 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+
 import styles from "@/styles/index.module.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Metadata } from "next";
+
 import Head from "next/head";
 import InstagramIcon from "@/components/icons/InstagramIcon";
+
+
 
 export default function Home() {
   return (
