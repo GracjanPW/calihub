@@ -5,63 +5,80 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { Data } from "./route";
 import { authOptions } from "../auth/[...nextauth]/route";
+import fs from "fs";
+import path from "path";
+import saveFile from "@/lib/saveFile";
+import prisma from '@/lib/db';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse<Data>) {
-    const session = await getServerSession(req, res, authOptions);
+export async function POST(req: Request, res: NextApiResponse<Data>) {
+  const session = await getServerSession(authOptions);
 
-    if (!checkAuthorization(session, [Roles.ADMIN, Roles.SUPERADMIN, Roles.PUBLISHER])) {
-        return res.status(401).json({ message: "Unauthorized" });
+  if (
+    !checkAuthorization(session, [
+      Roles.ADMIN,
+      Roles.SUPERADMIN,
+      Roles.PUBLISHER,
+    ])
+  ) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const form = await req.formData();
+    const image = form.get("banner") as File;
+    const title = form.get("title") as string;
+    const content = form.get("content") as string;
+    const categoryId = form.get("category") as string;
+    const draft = !Boolean((form.get("isPublished") as string) === "on");
+
+    if (!title || !content || !image) {
+      const missing: string[] = [];
+      if (!title) missing.push("title");
+      if (!content) missing.push("content");
+      if (!image) missing.push("image");
+      return new Response(`Missing required fields: ${missing.join(", ")}`, {
+        status: 400,
+      });
     }
 
-    try {
-
-        const prisma = new PrismaClient();
-        const { title, content, categoryId, draft } = req.body;
-
-        // Validate the request body
-        if (!title || !content) {
-            return res.status(400).json({ message: "Title and content are required" });
-        }
-        if (typeof title !== "string" || typeof content !== "string") {
-            return res.status(400).json({ message: "Title and content must be strings" });
-        }
-        if (categoryId) {
-            const existingCategory = await prisma.category.findFirst({
-                where: {
-                    id: categoryId,
-                },
-            });
-            if (!existingCategory) {
-                return res.status(400).json({ message: "Category does not exist" });
-            }
-        }
-
-        console.log(session.user)
-        // Create a new article
-        const newArticle = await prisma.article.create({
-            data: {
-                title,
-                content,
-                timeToRead: calculateTimeToRead(content),
-                category: { connect: {id: categoryId} },
-                author: { connect: { email: session.user.email } }, // Add the author property
-                isPublished: !draft,
-            },
-        }).catch((error) => {
-            return res.status(400).json({ message: error.message });
-        }).finally(async () => {
-            await prisma.$disconnect();
-        });
-
-        if (!newArticle) {
-            return res.status(500).json({ message: "Internal Server Error" });
-        }
-        return res.status(201).json(newArticle);
-
-
-    } catch (error) {
-        return res.status(500).json({ message: "Internal Server Error" });
+    if (image.type !== "image/png" && image.type !== "image/jpeg") {
+      return new Response("File must be of type png or jpeg", { status: 400 });
     }
 
+    if (image.size > 1024 * 1024 * 3) {
+      return new Response("File size must be less than 3MB", { status: 400 });
+    }
+    // save the file
+    const r = await saveFile(image);
+    if (r.error || !r.url) {
+      return new Response("Internal Server Error", { status: 500 });
+    }
 
+    console.log(r.url);
+
+    const newArticle = await prisma.article.create({
+        data: {
+          title,
+          content,
+          banner: { create: { url: r.url, name:"image", user: {connect:{id:session.user.id}} } },
+          timeToRead: calculateTimeToRead(content),
+          category: { connect: { id: categoryId } },
+          author: { connect: { id: session.user.id } }, 
+          editedDate: new Date(),
+          isPublished: !draft,
+        },
+      }).then((article) => {
+        console.log(article);
+      })
+      .catch((error) => {
+        console.log(error);
+        return res.status(400).json({ message: error.message });
+      })
+      console.log("newArticle", newArticle);
+  } catch (error) {
+    console.log(error);
+    return new Response("Internal Server Error", { status: 500 });
+  } finally {
+    return new Response("Hello, world!");
+  }
 }

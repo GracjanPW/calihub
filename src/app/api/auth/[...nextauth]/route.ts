@@ -3,11 +3,11 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client"
 import {Roles as PrismaRoles} from "@/../.prisma/client"
+import prisma from "@/lib/db";
 
 
 
 
-const prisma = new PrismaClient()
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -32,6 +32,7 @@ export const authOptions = {
     async session({ session, user, token }) {
 
       session.user.role = user.role
+      session.user.id = user.id
       return session
     }
   }
