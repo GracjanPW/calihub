@@ -1,3 +1,4 @@
+import prisma from '@/lib/db'
 import React from 'react'
 
 function page({params}:{
@@ -9,5 +10,6 @@ function page({params}:{
     <div>{params.id}</div>
   )
 }
+
 
 export default page

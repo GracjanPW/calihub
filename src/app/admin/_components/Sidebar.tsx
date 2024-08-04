@@ -90,7 +90,7 @@ export default function AdminSidebar() {
         </Sidebar.Logo>
         <Sidebar.Items>
           <Sidebar.ItemGroup className="grow">
-            <Sidebar.Item href="/dashboard" icon={HiChartPie}>
+            <Sidebar.Item href="/admin/dashboard" icon={HiChartPie}>
               Dashboard
             </Sidebar.Item>
             <Sidebar.Item href="/admin/blogs"  icon={HiViewBoards}>

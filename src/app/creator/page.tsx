@@ -15,21 +15,5 @@ function CreatorPage() {
   )
 }
 
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  if (![Roles.PUBLISHER, Roles.SUPERADMIN].includes(session?.user.role)) {
-    return {
-      redirect: {
-        destination: "/admin/login",
-        permanent: false,
-      },
-    }
-  }
-  return {
-    props:{
-      session
-    }
-  }
-}
 
 export default CreatorPage

@@ -66,6 +66,7 @@ export async function POST(req: Request, res: NextApiResponse<Data>) {
           author: { connect: { id: session.user.id } }, 
           editedDate: new Date(),
           isPublished: !draft,
+          publishDate: draft ? null : new Date(),
         },
       }).then((article) => {
         console.log(article);

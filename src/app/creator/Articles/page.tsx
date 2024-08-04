@@ -10,33 +10,6 @@ function ArticlesPage({session, articles}) {
     }) }</div>
   )
 }
-export async function getServerSideProps(context) {
-  const session = await getServerSession(context.req, context.res, authOptions)
-  if (![Roles.PUBLISHER, Roles.SUPERADMIN].includes(session?.user.role)) {
-    return {
-      redirect: {
-        destination: "/admin/login",
-        permanent: false,
-      },
-    }
-  }
-  const client = new PrismaClient()
-  const articles = await client.article.findMany({
-    where: {
-      author: {
-        email: session.user.email
-      }
-    }
-  })
-
-  client.$disconnect()
-  return {
-    props:{
-      session,
-      articles
-    }
-  }
-}
 
 
 export default ArticlesPage

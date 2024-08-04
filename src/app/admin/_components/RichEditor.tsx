@@ -1,6 +1,7 @@
 'use client'
 
 import '../_styles/RichEditor.scss'
+import '@/styles/tiptap.scss'
 
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'

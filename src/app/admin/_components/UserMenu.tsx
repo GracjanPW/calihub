@@ -1,5 +1,6 @@
-
+"use client";
 import { Avatar, Dropdown, DropdownDivider, DropdownHeader, DropdownItem } from "flowbite-react";
+import { signOut } from "next-auth/react";
 
 export default function Component() {
   return (
@@ -16,7 +17,7 @@ export default function Component() {
       <DropdownItem>Settings</DropdownItem>
       <DropdownItem>Earnings</DropdownItem>
       <DropdownDivider />
-      <DropdownItem>Sign out</DropdownItem>
+      <DropdownItem onClick={()=>signOut()}>Sign out</DropdownItem>
     </Dropdown>
   );
 }

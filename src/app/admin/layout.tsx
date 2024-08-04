@@ -28,7 +28,7 @@ async function layout({
         <AdminSidebar/>
         
         <div className="grow flex flex-col h-full space-y-4">
-          <div className='flex justify-end p-2 rounded-md'>
+          <div className='flex justify-end p-2 space-x-4 rounded-md'>
             <DarkThemeToggle className="hover:bg-text-dark-hover dark:hover:bg-text-light-hover text-text-dark-base dark:focus:ring-bg-dark-1"/>
             <UserMenu/>
           </div>
