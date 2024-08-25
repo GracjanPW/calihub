@@ -9,14 +9,11 @@ import Divider from "./common/Divider";
 
 function Navbar() {
   const { width } = useWindowSize();
-  const { data:session} = useSession()
+  const session = useSession()
+  console.log(session)
 
 
 
-  if (width < 150)
-    return (
-    <h1>not implemented</h1>
-  );
   return (
     <nav className="sticky float-left flex flex-col justify-between items-center h-[100vh] bg-[#212121] w-[250px] px-4">
         <div className="w-full my-4">
@@ -52,7 +49,7 @@ function Navbar() {
           </Link>
         </div>
         <div className="my-4">
-          <UserButton imageUrl={session?.user.image} username={session?.user.name}/>
+          <UserButton imageUrl={session?.data.user.image} username={session?.data.user.name}/>
         </div>
     </nav>
   )

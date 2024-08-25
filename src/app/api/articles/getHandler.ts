@@ -1,26 +1,47 @@
 import checkAuthorization from "@/lib/checkAuthorization";
-import { Roles, PrismaClient } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
-import { Data } from "./route";
-import { authOptions } from "../auth/[...nextauth]/route";
+import { Roles } from "@prisma/client";
+import prisma from "@/lib/db";
+import {auth} from "@/auth/auth"
 
-export async function GET(req: NextApiRequest, res: NextApiResponse<Data>) {
-    const session = await getServerSession(req, res, authOptions);
+export async function GET(req:Request, res) {
+    const session = await auth();
+    if (!session) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!checkAuthorization(session, [Roles.ADMIN, Roles.SUPERADMIN, Roles.PUBLISHER])) {
-        return res.status(401).json({ message: "Unauthorized" });
+    if (!checkAuthorization(session, [Roles.ADMIN, Roles.OWNER, Roles.PUBLISHER])) {
+        return new Response("Unauthorized", { status: 401 });
     }
-
-    const prisma = new PrismaClient();
-    const articles = await prisma.article.findMany({
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+    if (!id) {
+        return new Response("Bad Request, id not provided", { status: 400 });
+    }
+    const articles = await prisma.article.findUnique({
         where: {
-            author: session.user.id,
+            id: id,
         },
-        include: {
-            category: true,
+        select: {
+            id: true,
+            title: true,
+            content: true,
+            category: {
+                select: {
+                    name: true,
+                    id: true,
+                },
+            },
+            isPublished: true,
+            banner: {
+                select: {
+                    url: true,
+                },
+            },
+            }
+        },
+    );
+
+    return new Response(JSON.stringify(articles), {
+        headers: {
+            "content-type": "application/json",
         },
     });
-    await prisma.$disconnect();
-    return res.status(200).json({ articles });
 }

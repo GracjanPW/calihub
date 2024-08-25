@@ -1,14 +1,15 @@
 import checkAuthorization from "@/lib/checkAuthorization";
 import { Roles, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
+
 import { Data } from "./route";
-import { authOptions } from "../auth/[...nextauth]/route";
+import {auth} from "@/auth/auth"
 
 export async function DELETE(req: NextApiRequest, res: NextApiResponse<Data>) {
-    const session = await getServerSession(req, res, authOptions);
+    const session = await auth();
+    if (!session) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!checkAuthorization(session, [Roles.ADMIN, Roles.SUPERADMIN, Roles.PUBLISHER])) {
+    if (!checkAuthorization(session, [Roles.ADMIN, Roles.OWNER, Roles.PUBLISHER])) {
         return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -21,7 +22,7 @@ export async function DELETE(req: NextApiRequest, res: NextApiResponse<Data>) {
         .delete({
             where: {
                 id: articleId,
-                author: session.user.id,
+                userId: session.user.id,
             },
         })
         .then(() => {

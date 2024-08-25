@@ -1,25 +1,11 @@
-
 import styles from "@/styles/index.module.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import Head from "next/head";
-import InstagramIcon from "@/components/icons/InstagramIcon";
-
-
-
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Calihub - Everything Calisthenics </title>
-        <meta
-          name="description"
-          content="Looking to take up calisthenics training or you are a beginner looking to improve? 
-                  At Calihub you will find everything you need to start your journey and progress through the skill tree. 
-                  We offer resources ranging from calsithenics related blogs, tutorials, workout plans and many more to come."
-        />
-      </Head>
+
       <main className="w-full">
         <Navbar />
         <section className={styles.background + " relative"}>
@@ -47,38 +33,21 @@ export default function Home() {
 
         <section className=" text-white">
           <div className="w-full p-8 text-center">
-            <h1 className="text-3xl font-bold bg-red-800 py-3 rounded-t-md my-2">
+            <h1 className="text-4xl font-bold py-3 rounded-t-md my-2">
               About
             </h1>
-            <div className="border-red-800 border-2 rounded-b-md p-6 text-2xl font-medium">
-              <p>
+            <div className="p-6 text-2xl font-medium">
+              <p className="leading-8 ">
                 Looking to take up calisthenics training or you are a beginner
                 looking to improve? At Calihub you will find everything you need
-                to start your journey and progress through the skill tree. We
-                offer resources ranging from calsithenics related blogs,
+                to start your journey and progress through the skill tree.
+              </p>
+              <br />
+              <p className="leading-8">
+                We offer resources ranging from calsithenics related blogs,
                 tutorials, workout plans and many more to come.
               </p>
-            </div>
-            <br />
-
-            <h1 className="text-3xl font-bold bg-red-800 py-3 rounded-md my-2">
-              The Team
-            </h1>
-            <div className="border-red-800 border-2 rounded-sm p-4 text-lg">
-              <div className="background"></div>
-            </div>
-            <h1 className="text-3xl font-bold bg-red-800 py-3 rounded-md my-2">
-              Socials and Contact
-            </h1>
-            <div className="border-red-800 border-2 rounded-sm p-4 text-lg flex-row flex justify-center space-x-4">
-              <div className="flex-col flex items-center">
-                <InstagramIcon />
-                <p>Gw_gains</p>
-              </div>
-              <div className="flex-col flex items-center">
-                <p className="text-5xl">🎁</p>
-                <p>Gw_gains</p>
-              </div>
+              
             </div>
           </div>
         </section>

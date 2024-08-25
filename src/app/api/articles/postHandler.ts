@@ -2,21 +2,21 @@ import calculateTimeToRead from "@/lib/calculateTimeToRead";
 import checkAuthorization from "@/lib/checkAuthorization";
 import { Roles, PrismaClient, Prisma } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getServerSession } from "next-auth";
+
 import { Data } from "./route";
-import { authOptions } from "../auth/[...nextauth]/route";
+import {auth} from "@/auth/auth"
 import fs from "fs";
 import path from "path";
 import saveFile from "@/lib/saveFile";
 import prisma from '@/lib/db';
 
 export async function POST(req: Request, res: NextApiResponse<Data>) {
-  const session = await getServerSession(authOptions);
-
+  const session = await auth();
+  if (!session) return res.status(401).json({ message: "Unauthorized" });
   if (
     !checkAuthorization(session, [
       Roles.ADMIN,
-      Roles.SUPERADMIN,
+      Roles.OWNER,
       Roles.PUBLISHER,
     ])
   ) {
@@ -50,7 +50,7 @@ export async function POST(req: Request, res: NextApiResponse<Data>) {
     }
     // save the file
     const r = await saveFile(image);
-    if (r.error || !r.url) {
+    if (!r.url) {
       return new Response("Internal Server Error", { status: 500 });
     }
 
