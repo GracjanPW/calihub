@@ -14,7 +14,6 @@ export const ADMIN_ROUTES = [
 export const AUTH_ROUTES = [
     "/auth/login",
     "/auth/register",
-    "/auth/logout",
     "/auth/verify-email",
     "/auth/reset-password",
     "/auth/new-password"

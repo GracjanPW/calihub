@@ -1,17 +1,17 @@
 import getUser from '@/actions/getUser'
 import UserButton from '@/components/unique/UserButton'
-import React from 'react'
+import React, { ReactNode } from 'react'
 import Image from "next/image"
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 
 
-async function layout() {
+async function layout({children}:{children:ReactNode}) {
   const user = await getUser()
   return (
     <div className='p-4 space-x-4 flex flex-row h-full'>
-        <div className='flex flex-col justify-between h-full bg-bg-dark-1 p-2 max-w-40 w-full'>
+        <div className='rounded-md border-bg-dark-2 border flex flex-col justify-between h-full bg-bg-dark-1 p-2 max-w-48 w-full'>
             <AspectRatio ratio={2/1}>
               <Image src="/media/logo.png" alt="logo" fill className='object-cover'/>
             </AspectRatio>
@@ -35,8 +35,8 @@ async function layout() {
             </div>
             <UserButton imageUrl={user?.image} username={user?.name} role={user?.role} />
         </div>
-        <div className='grow'>
-
+        <div className='grow flex flex-col justify-center items-center'>
+          {children}
         </div>
     </div>
   )

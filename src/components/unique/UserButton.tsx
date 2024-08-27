@@ -13,6 +13,9 @@ import { Roles } from "@prisma/client";
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import { IoIosAt } from "react-icons/io";
 import { Separator } from "../ui/separator";
+import Link from "next/link";
+import { signOut } from "@/auth/auth";
+
 function UserButton({
   imageUrl,
   username,
@@ -46,24 +49,27 @@ function UserButton({
         className="flex flex-col space-y-2 w-fit p-2 bg-bg-dark-1 border-bg-dark-2"
       >
         <div className="flex justify-start items-center space-x-2">
-         <Avatar className="h-8 w-8 rounded-md">
-          <AvatarImage src={imageUrl ? imageUrl : ""} />
-          <AvatarFallback>{username![0].toUpperCase()}</AvatarFallback>
-        </Avatar>
-        <div className="text-stone-300 text-sm">
-          <p>{username}</p>
-          <p>{role.toLowerCase()}</p>
+          <Avatar className="h-8 w-8 rounded-md">
+            <AvatarImage src={imageUrl ? imageUrl : ""} />
+            <AvatarFallback>{username![0].toUpperCase()}</AvatarFallback>
+          </Avatar>
+          <div className="text-stone-300 text-sm">
+            <p>{username}</p>
+            <p>{role.toLowerCase()}</p>
+          </div>
         </div>
-        </div>
-        
+
         <Separator />
         {([Roles.OWNER, Roles.ADMIN] as string[]).includes(role) && (
           <Button
             className="space-x-2 justify-start p-2 pr-4 text-stone-300"
             variant={"ghost"}
+            asChild
           >
-            <MdOutlineAdminPanelSettings size={24} />
-            <span>Admin</span>
+            <Link href={"/user/admin"}>
+              <MdOutlineAdminPanelSettings size={24} />
+              <span>Admin</span>
+            </Link>
           </Button>
         )}
         {([Roles.OWNER, Roles.ADMIN, Roles.PUBLISHER] as string[]).includes(
@@ -72,26 +78,46 @@ function UserButton({
           <Button
             className="space-x-2 justify-start p-2 pr-4 text-stone-300"
             variant={"ghost"}
+            asChild
           >
-            <IoIosAt size={24} />
-            <span>Creator</span>
+            <Link href={"/user/creator"}>
+              <IoIosAt size={24} />
+              <span>Creator</span>
+            </Link>
           </Button>
         )}
 
         <Button
           className="space-x-2 justify-start p-2 pr-4 text-stone-300"
           variant={"ghost"}
+          asChild
         >
-          <RiSettings3Line size={24} />
-          <span>Settings</span>
+          <Link href={"/user/settings"}>
+            <RiSettings3Line size={24} />
+            <span>Settings</span>
+          </Link>
         </Button>
-        <Button
-          className="space-x-2 justify-start p-2 pr-4 text-stone-300 hover:bg-red-600 hover:text-stone-300"
+        <form
+          className="w-full"
+          action={async ()=>{
+            "use server"
+            await signOut({
+              redirectTo:"/auth/logout"
+            })
+          }}
+        >
+           <Button
+              type="submit"
+          className="w-full space-x-2 justify-start p-2 pr-4 text-stone-300 hover:bg-red-600 hover:text-stone-300"
           variant={"ghost"}
+
         >
-          <RxExit size={24} />
-          <span>Logout</span>
+
+            <RxExit size={24} />
+            <span>Logout</span>
         </Button>
+        </form>
+       
       </PopoverContent>
     </Popover>
   );

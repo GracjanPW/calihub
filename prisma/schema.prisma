@@ -57,7 +57,7 @@ model User {
   image         String?
   password      String? 
   twoFactor     Boolean @default(false)
-  role          Roles @default(BLOCKED)
+  role          Roles @default(USER)
   accounts      Account[]
   sessions      Session[]
   articles      Article[]

@@ -13,6 +13,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
   events: {
+    async signIn({user,account,isNewUser}){
+      console.log(account)
+    },
     async linkAccount({ user }) {
       await db.user.update({
         where: { id: user.id },

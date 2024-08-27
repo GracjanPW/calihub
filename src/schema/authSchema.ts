@@ -27,24 +27,22 @@ export const loginCredentialsSchema = z.object({
  * The email must be a valid email
  * The confirmPassword must match the password
  */
-export const signupCredentialsSchema = z
-  .object({
-    name: z.string().min(1, {
-      message: "Name is required",
+export const signupCredentialsSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email is required",
+    })
+    .email({
+      message: "Email is invalid",
     }),
-    email: z
-      .string()
-      .min(1, {
-        message: "Email is required",
-      })
-      .email({
-        message: "Email is invalid",
-      }),
-    password: z.string().min(8, {
-      message: "Password must be at least 8 characters long",
-    }),
-  })
-
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
+  }),
+});
 
 /**
  * This is the schema for the email reset password
@@ -81,3 +79,19 @@ export const newPasswordSchema = z
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
+
+/**
+ * This is the schema for changing a password
+ * It requires current password to be provided
+ * and a new password of at least 8 characters
+ * 
+ */
+
+export const changePasswordSchema = z.object({
+  password: z.string().min(1, {
+    message: "Current password must be provided",
+  }),
+  newPassword: z.string().min(8, {
+    message: "New password must be at least 8 characters long",
+  }),
+});
